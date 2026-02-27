@@ -7,7 +7,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const ProblemStatement = () => {
   return (
-    <Box sx={{ py: 8 }}>
+    <Box sx={{ py: 10, bgcolor: 'grey.50' }}>
       <Container maxWidth="lg">
         <SectionTitle title={PROBLEM.title} />
 
@@ -15,13 +15,15 @@ const ProblemStatement = () => {
           {/* Challenges */}
           <Grid item xs={12} md={6}>
             <Paper
-              elevation={3}
+              elevation={0}
               sx={{
                 p: 4,
                 height: '100%',
-                bgcolor: 'error.50',
+                bgcolor: 'white',
+                border: '1px solid',
+                borderColor: 'divider',
                 borderLeft: '4px solid',
-                borderColor: 'error.main',
+                borderLeftColor: 'error.main',
               }}
             >
               <Typography variant="h5" gutterBottom fontWeight={600} color="error.main">
@@ -60,13 +62,15 @@ const ProblemStatement = () => {
           {/* Solutions */}
           <Grid item xs={12} md={6}>
             <Paper
-              elevation={3}
+              elevation={0}
               sx={{
                 p: 4,
                 height: '100%',
-                bgcolor: 'success.50',
+                bgcolor: 'white',
+                border: '1px solid',
+                borderColor: 'divider',
                 borderLeft: '4px solid',
-                borderColor: 'success.main',
+                borderLeftColor: 'success.main',
               }}
             >
               <Typography variant="h5" gutterBottom fontWeight={600} color="success.main">

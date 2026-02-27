@@ -33,7 +33,7 @@ const KeyMetrics = () => {
   const metricsArray = Object.values(metrics);
 
   return (
-    <Box sx={{ py: 8, bgcolor: 'grey.50' }}>
+    <Box sx={{ py: 10, bgcolor: 'white' }}>
       <Container maxWidth="lg">
         <SectionTitle
           title="Key Metrics Highlight"
@@ -51,9 +51,9 @@ const KeyMetrics = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={4} alignItems="stretch">
             {metricsArray.map((metric, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
+              <Grid item xs={12} sm={6} md={4} lg={2.4} key={index} display="flex">
                 <MetricCard
                   label={metric.label}
                   value={metric.value}

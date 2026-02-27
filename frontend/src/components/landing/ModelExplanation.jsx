@@ -25,7 +25,7 @@ const ModelExplanation = () => {
   };
 
   return (
-    <Box id="model-section" sx={{ py: 8 }}>
+    <Box id="model-section" sx={{ py: 10, bgcolor: 'grey.50' }}>
       <Container maxWidth="lg">
         <SectionTitle title={MODEL.title} />
 
@@ -33,23 +33,34 @@ const ModelExplanation = () => {
         <Accordion
           expanded={expanded === 'panel1'}
           onChange={handleChange('panel1')}
-          sx={{ mb: 2 }}
+          elevation={0}
+          sx={{ 
+            mb: 3,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2,
+            '&:before': { display: 'none' },
+            '&.Mui-expanded': { margin: '0 0 24px 0' },
+          }}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6" fontWeight={600}>
+          <AccordionSummary 
+            expandIcon={<ExpandMoreIcon />}
+            sx={{ px: 4, py: 2 }}
+          >
+            <Typography variant="h5" fontWeight={700}>
               {MODEL.approach.title}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ px: 4, pb: 3 }}>
+            <List sx={{ py: 0 }}>
               {MODEL.approach.items.map((item, index) => (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    <CheckCircleIcon color="primary" />
+                <ListItem key={index} sx={{ px: 0, py: 1 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <CheckCircleIcon color="primary" sx={{ fontSize: 24 }} />
                   </ListItemIcon>
                   <ListItemText
                     primary={item}
-                    primaryTypographyProps={{ variant: 'body1', fontWeight: 500 }}
+                    primaryTypographyProps={{ variant: 'body1', fontWeight: 500, lineHeight: 1.7 }}
                   />
                 </ListItem>
               ))}
@@ -61,23 +72,34 @@ const ModelExplanation = () => {
         <Accordion
           expanded={expanded === 'panel2'}
           onChange={handleChange('panel2')}
-          sx={{ mb: 2 }}
+          elevation={0}
+          sx={{ 
+            mb: 3,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2,
+            '&:before': { display: 'none' },
+            '&.Mui-expanded': { margin: '0 0 24px 0' },
+          }}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6" fontWeight={600}>
+          <AccordionSummary 
+            expandIcon={<ExpandMoreIcon />}
+            sx={{ px: 4, py: 2 }}
+          >
+            <Typography variant="h5" fontWeight={700}>
               {MODEL.whyGlobal.title}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ px: 4, pb: 3 }}>
+            <List sx={{ py: 0 }}>
               {MODEL.whyGlobal.items.map((item, index) => (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    <CheckCircleIcon color="secondary" />
+                <ListItem key={index} sx={{ px: 0, py: 1 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <CheckCircleIcon color="secondary" sx={{ fontSize: 24 }} />
                   </ListItemIcon>
                   <ListItemText
                     primary={item}
-                    primaryTypographyProps={{ variant: 'body1', fontWeight: 500 }}
+                    primaryTypographyProps={{ variant: 'body1', fontWeight: 500, lineHeight: 1.7 }}
                   />
                 </ListItem>
               ))}
@@ -89,16 +111,35 @@ const ModelExplanation = () => {
         <Accordion
           expanded={expanded === 'panel3'}
           onChange={handleChange('panel3')}
-          sx={{ mb: 2 }}
+          elevation={0}
+          sx={{ 
+            mb: 0,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2,
+            '&:before': { display: 'none' },
+          }}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="h6" fontWeight={600}>
+          <AccordionSummary 
+            expandIcon={<ExpandMoreIcon />}
+            sx={{ px: 4, py: 2 }}
+          >
+            <Typography variant="h5" fontWeight={700}>
               {MODEL.method.title}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <Paper sx={{ p: 3, bgcolor: 'grey.100' }}>
-              <Typography variant="body1" lineHeight={1.8}>
+          <AccordionDetails sx={{ px: 4, pb: 3 }}>
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 4, 
+                bgcolor: 'primary.50',
+                border: '1px solid',
+                borderColor: 'primary.100',
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="body1" lineHeight={1.8} fontWeight={500}>
                 {MODEL.method.description}
               </Typography>
             </Paper>

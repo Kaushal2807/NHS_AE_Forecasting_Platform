@@ -6,28 +6,42 @@ import StarIcon from '@mui/icons-material/Star';
 
 const Differentiation = () => {
   return (
-    <Box sx={{ py: 8, bgcolor: 'grey.50' }}>
+    <Box sx={{ py: 10, bgcolor: 'white' }}>
       <Container maxWidth="lg">
         <SectionTitle title={DIFFERENTIATION.title} />
 
         <Paper
-          elevation={4}
+          elevation={0}
           sx={{
-            p: 4,
+            p: 5,
             borderLeft: '6px solid',
             borderColor: 'success.main',
-            bgcolor: 'success.50',
+            bgcolor: 'white',
+            border: '1px solid',
+            borderLeftWidth: '6px',
+            borderRadius: 2,
           }}
         >
-          <List>
+          <List sx={{ py: 0 }}>
             {DIFFERENTIATION.points.map((point, index) => (
-              <ListItem key={index} sx={{ mb: 1 }}>
-                <ListItemIcon>
-                  <StarIcon sx={{ color: 'success.main', fontSize: 28 }} />
+              <ListItem 
+                key={index} 
+                sx={{ 
+                  mb: index < DIFFERENTIATION.points.length - 1 ? 2.5 : 0,
+                  px: 2,
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 48 }}>
+                  <StarIcon sx={{ color: 'success.main', fontSize: 32 }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={point}
-                  primaryTypographyProps={{ variant: 'body1', fontWeight: 600 }}
+                  primaryTypographyProps={{ 
+                    variant: 'h6', 
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    lineHeight: 1.6,
+                  }}
                 />
               </ListItem>
             ))}

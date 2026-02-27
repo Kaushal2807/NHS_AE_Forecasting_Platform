@@ -7,14 +7,14 @@ import DatasetIcon from '@mui/icons-material/Dataset';
 
 const DatasetOverview = () => {
   return (
-    <Box sx={{ py: 8, bgcolor: 'grey.50' }}>
+    <Box sx={{ py: 10, bgcolor: 'white' }}>
       <Container maxWidth="lg">
         <SectionTitle title={DATASET.title} subtitle={DATASET.description} />
 
-        <Grid container spacing={4} alignItems="center">
+        <Grid container spacing={4} alignItems="stretch">
           {/* Data Includes */}
           <Grid item xs={12} md={6}>
-            <Paper elevation={2} sx={{ p: 4, height: '100%' }}>
+            <Paper elevation={1} sx={{ p: 4, height: '100%', border: '1px solid', borderColor: 'divider' }}>
               <Box display="flex" alignItems="center" mb={2}>
                 <DatasetIcon sx={{ fontSize: 32, color: 'primary.main', mr: 1 }} />
                 <Typography variant="h5" fontWeight={600}>
@@ -39,7 +39,7 @@ const DatasetOverview = () => {
 
           {/* Data Characteristics */}
           <Grid item xs={12} md={6}>
-            <Paper elevation={2} sx={{ p: 4, height: '100%' }}>
+            <Paper elevation={1} sx={{ p: 4, height: '100%', border: '1px solid', borderColor: 'divider' }}>
               <Box display="flex" alignItems="center" mb={2}>
                 <CheckCircleIcon sx={{ fontSize: 32, color: 'secondary.main', mr: 1 }} />
                 <Typography variant="h5" fontWeight={600}>

@@ -13,9 +13,12 @@ const HeroSection = () => {
       sx={{
         background: 'linear-gradient(135deg, #1976D2 0%, #00897B 100%)',
         color: 'white',
-        py: { xs: 8, md: 12 },
+        py: { xs: 10, md: 15 },
         position: 'relative',
         overflow: 'hidden',
+        minHeight: { xs: '500px', md: '600px' },
+        display: 'flex',
+        alignItems: 'center',
         '&::before': {
           content: '""',
           position: 'absolute',

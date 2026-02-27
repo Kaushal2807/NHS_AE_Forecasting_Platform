@@ -47,7 +47,7 @@ const Header = () => {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2, fontWeight: 700 }}>
+      <Typography variant="h5" sx={{ my: 2, fontWeight: 700 }}>
         NHS A&E Platform
       </Typography>
       <List>
@@ -107,11 +107,11 @@ const Header = () => {
                 flexGrow: isMobile ? 1 : 0,
               }}
             >
-              <LocalHospitalIcon sx={{ fontSize: 32, mr: 1 }} />
+              <LocalHospitalIcon sx={{ fontSize: 40, mr: 1.5 }} />
               <Typography
-                variant="h6"
+                variant="h5"
                 component="div"
-                sx={{ fontWeight: 700, display: { xs: 'none', sm: 'block' } }}
+                sx={{ fontWeight: 700, display: { xs: 'none', sm: 'block' }, fontSize: '1.5rem' }}
               >
                 NHS A&E Platform
               </Typography>

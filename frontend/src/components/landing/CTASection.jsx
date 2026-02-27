@@ -10,7 +10,7 @@ const CTASection = () => {
   return (
     <Box
       sx={{
-        py: 8,
+        py: 12,
         background: 'linear-gradient(135deg, #1976D2 0%, #00897B 100%)',
         color: 'white',
         textAlign: 'center',
