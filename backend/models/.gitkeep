@@ -1,0 +1,9 @@
+# Placeholder file to ensure models directory is created
+# Trained models will be saved here as .pkl files
+
+# This directory will contain:
+# - type1_model.pkl (Type 1 Emergency Admissions model)
+# - total_model.pkl (Total Admissions model)
+# - wait_model.pkl (12+ Hour Wait Times model)
+
+# Models are generated automatically on first API startup

@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation (if not needed)
+*.md
+
+# Logs
+*.log
+
+# Excel lock files
+.~lock.*
+
+# Excel files (keep only cleaned.csv)
+AE_Cleaned_V4.xlsx
+
+# Models (will be generated on first run)
+models/*.pkl
+models/*.joblib
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
