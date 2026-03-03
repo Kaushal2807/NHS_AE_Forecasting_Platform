@@ -26,12 +26,6 @@ export const mockMetrics = {
     change: "Year-over-year",
     icon: "TrendingUp",
   },
-  forecastYear1: {
-    label: "Forecasted Year 1 Total Attendance",
-    value: "15.3M",
-    change: "Projected 36-month",
-    icon: "Visibility",
-  },
 };
 
 export default mockMetrics;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Get API base URL from environment variable or use default
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// Get API base URL from environment variable or use production default
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://nhs-backend-api.onrender.com';
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -43,6 +43,39 @@ export const api = {
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Prediction failed:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Get available metrics
+  getAvailableMetrics: async () => {
+    try {
+      const response = await apiClient.get('/available-metrics');
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error('Available metrics fetch failed:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Get model accuracy for all models
+  getModelAccuracy: async () => {
+    try {
+      const response = await apiClient.get('/model-accuracy');
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error('Model accuracy fetch failed:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Get model accuracy for specific model
+  getModelAccuracyByMetric: async (metricName) => {
+    try {
+      const response = await apiClient.get(`/model-accuracy/${metricName}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error(`Model accuracy fetch failed for ${metricName}:`, error);
       return { success: false, error: error.message };
     }
   },

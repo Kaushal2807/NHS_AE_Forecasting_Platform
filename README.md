@@ -114,23 +114,55 @@ Every push to the `production` branch will automatically deploy.
 
 ## 🔧 Backend Integration
 
-When the backend is ready:
+### Backend Status: ✅ READY TO DEPLOY
 
-1. Deploy backend to your hosting service (e.g., Railway, Render, AWS)
-2. Copy the backend URL
-3. Go to **Vercel Dashboard** → **Your Project** → **Settings** → **Environment Variables**
-4. Update `VITE_API_BASE_URL` with your backend URL
-5. **Redeploy** the frontend
+The backend is fully implemented and ready for deployment!
+
+#### Deploying Backend to Render
+
+1. **Push to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Add complete backend with Docker support"
+   git push origin production
+   ```
+
+2. **Deploy to Render:**
+   - Go to [render.com](https://render.com) and sign up/login
+   - Create **New Web Service**
+   - Connect your GitHub repository
+   - Configure:
+     - **Root Directory:** `backend`
+     - **Runtime:** Docker
+     - **Instance Type:** Starter ($7/month recommended) or Free
+   - Click **Create Web Service**
+   - Wait 5-10 minutes for build and deployment
+   - Copy your deployed URL (e.g., `https://nhs-ae-forecasting-api.onrender.com`)
+
+3. **Connect Frontend to Backend:**
+   - Go to **Vercel Dashboard** → **Your Project** → **Settings** → **Environment Variables**
+   - Update `VITE_API_BASE_URL` with your Render backend URL
+   - **Redeploy** the frontend
+
+📚 **Detailed deployment guide:** See [`backend/DEPLOYMENT.md`](backend/DEPLOYMENT.md)
 
 **No code changes needed!** All API calls are centralized in `frontend/src/utils/api.js`.
 
-### Expected Backend Endpoints
+### Backend API Endpoints
 
 ```
-GET  /health      → Server health status
-GET  /metrics     → Dashboard KPI metrics
-POST /predict     → Forecasting predictions
+GET  /health              → Server health status
+GET  /metrics             → Dashboard KPI metrics
+POST /predict             → Generate forecasts
+GET  /available-metrics   → List available metrics
 ```
+
+### Tech Stack (Backend)
+
+- **Framework:** FastAPI (Python)
+- **ML Model:** XGBoost (Gradient Boosting)
+- **Deployment:** Docker on Render
+- **Features:** Recursive 36-month forecasting with lag features
 
 ---
 
