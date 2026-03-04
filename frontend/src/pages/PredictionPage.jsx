@@ -354,7 +354,17 @@ const PredictionPage = () => {
                       <Typography variant="h6" fontWeight={700} sx={{ color: '#34d399', fontSize: { xs: '1.1rem', md: '1.25rem' } }}>Forecast Generated Successfully</Typography>
                     </Stack>
                     <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="center" alignItems="center" gap={{ xs: 0.5, sm: 4 }}>
-                      <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: { xs: '0.85rem', md: '0.9rem' }, fontWeight: 500 }}>{new Date(prediction.forecast_generated_at).toLocaleString()}</Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: { xs: '0.85rem', md: '0.9rem' }, fontWeight: 500 }}>{(() => {
+                        const now = new Date();
+                        const day = now.getDate();
+                        const suffix = day % 10 === 1 && day !== 11 ? 'st' : day % 10 === 2 && day !== 12 ? 'nd' : day % 10 === 3 && day !== 13 ? 'rd' : 'th';
+                        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                        const hours = now.getHours();
+                        const mins = now.getMinutes().toString().padStart(2, '0');
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        const h12 = hours % 12 || 12;
+                        return <>{day}<sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>{suffix}</sup> {months[now.getMonth()]} {now.getFullYear()}, {h12}:{mins} {ampm}</>;
+                      })()}</Typography>
                       <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: { xs: '0.85rem', md: '0.9rem' }, fontWeight: 500 }}>Horizon: {prediction.horizon_months} months</Typography>
                     </Stack>
                   </Box>

@@ -28,12 +28,12 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
 const AVAILABLE_METRICS = [
-  { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', color: '#60a5fa' },
-  { name: 'Type2_Admissions', label: 'Type 2 Emergency Admissions', color: '#34d399' },
-  { name: 'Other_Admissions', label: 'Other A&E Department Admissions', color: '#fb923c' },
-  { name: 'Other_Emergency', label: 'Other Emergency Admissions', color: '#c084fc' },
-  { name: 'Total_Admissions', label: 'Total Emergency Admissions', color: '#f87171' },
-  { name: 'Wait_12hrs', label: 'Patients Waiting 12+ Hours', color: '#f472b6' },
+  { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', shortLabel: 'Type 1', color: '#60a5fa' },
+  { name: 'Type2_Admissions', label: 'Type 2 Emergency Admissions', shortLabel: 'Type 2', color: '#34d399' },
+  { name: 'Other_Admissions', label: 'Other A&E Department Admissions', shortLabel: 'Other A&E', color: '#fb923c' },
+  { name: 'Other_Emergency', label: 'Other Emergency Admissions', shortLabel: 'Other Emg', color: '#c084fc' },
+  { name: 'Total_Admissions', label: 'Total Emergency Admissions', shortLabel: 'Total', color: '#f87171' },
+  { name: 'Wait_12hrs', label: 'Patients Waiting 12+ Hours', shortLabel: '12+ Hrs Wait', color: '#f472b6' },
 ];
 
 /* Glass panel component */
@@ -98,6 +98,54 @@ const formatYAxis = (value) => {
   if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
   if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
   return value;
+};
+
+/* Compact legend for mobile */
+const CompactLegend = ({ payload }) => {
+  if (!payload) return null;
+  // Filter out forecast-only and "none" legend entries
+  const items = payload.filter(entry => entry.type !== 'none');
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: '6px 12px',
+        px: 1,
+        pb: 1,
+      }}
+    >
+      {items.map((entry, index) => {
+        // Extract metric name from the dataKey
+        const metricKey = entry.dataKey?.replace('_Forecast', '');
+        const metric = AVAILABLE_METRICS.find(m => m.name === metricKey);
+        return (
+          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                backgroundColor: entry.color,
+                flexShrink: 0,
+              }}
+            />
+            <Typography
+              sx={{
+                fontSize: '0.62rem',
+                color: 'rgba(148,163,184,0.85)',
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {metric?.shortLabel || entry.value}
+            </Typography>
+          </Box>
+        );
+      })}
+    </Box>
+  );
 };
 
 /* Format date for X-axis */
@@ -212,7 +260,7 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
   const getMetricInfo = (name) => AVAILABLE_METRICS.find((m) => m.name === name);
 
   // Calculate chart height based on screen size
-  const chartHeight = isMobile ? 320 : 450;
+  const chartHeight = isMobile ? 380 : 450;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 }, width: '100%' }}>
@@ -287,7 +335,8 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                wrapperStyle={{ fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' }}
+                content={isMobile ? <CompactLegend /> : undefined}
+                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
                 iconType="line"
                 verticalAlign="top"
                 align="center"
@@ -361,7 +410,8 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                wrapperStyle={{ fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' }}
+                content={isMobile ? <CompactLegend /> : undefined}
+                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"
@@ -418,7 +468,8 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                wrapperStyle={{ fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' }}
+                content={isMobile ? <CompactLegend /> : undefined}
+                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"
@@ -490,7 +541,8 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                wrapperStyle={{ fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' }}
+                content={isMobile ? <CompactLegend /> : undefined}
+                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"
