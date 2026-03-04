@@ -2,7 +2,7 @@
 
 export const HERO = {
   title: "AI-Powered NHS A&E Forecasting Platform",
-  subtitle: "36-Month Predictive Analytics for Emergency Department Operations Across UK Hospitals",
+  subtitle: "60-Month Predictive Analytics for Emergency Department Operations Across UK Hospitals",
   description: "A machine learning system that forecasts A&E attendance, emergency admissions, and 4-hour performance metrics using panel time-series modeling.",
   primaryCTA: "Start Prediction",
   secondaryCTA: "View Forecast Engine",
@@ -72,17 +72,17 @@ export const PREDICTIONS = {
       icon: "LocalHospital",
     },
     {
-      title: "36-Month Future Projections",
-      description: "Up to 3 years ahead",
+      title: "60-Month Future Projections",
+      description: "Up to 5 years ahead",
       icon: "TrendingUp",
     },
     {
       title: "Year-wise Aggregated Forecast",
-      description: "Year 1, Year 2, Year 3 summaries",
+      description: "Year 1, Year 2, Year 3, Year 4, Year 5 summaries",
       icon: "CalendarToday",
     },
   ],
-  forecastRange: "Up to 36 months (3 years) ahead.",
+  forecastRange: "Up to 60 months (5 years) ahead.",
   predictionType: "Recursive multi-step time-series forecasting.",
 };
 
@@ -128,7 +128,7 @@ export const FEATURES = {
     },
     {
       title: "Adjustable forecast horizon",
-      description: "1–36 months ahead",
+      description: "1–60 months ahead",
       icon: "DateRange",
     },
     {
@@ -215,7 +215,7 @@ export const DIFFERENTIATION = {
 export const CTA_FINAL = {
   title: "Start Forecasting Now",
   button: "Go to Prediction Page",
-  description: "Explore 36-month projections and plan healthcare operations with confidence.",
+  description: "Explore 60-month projections and plan healthcare operations with confidence.",
 };
 
 export const FOOTER = {

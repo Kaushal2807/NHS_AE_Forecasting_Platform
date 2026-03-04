@@ -43,7 +43,7 @@ const GlassPanel = ({ children, sx = {}, ...props }) => (
 const PredictionPage = () => {
   const navigate = useNavigate();
   const [selectedMetrics, setSelectedMetrics] = useState(['Type1_Admissions', 'Total_Admissions']);
-  const [forecastHorizon, setForecastHorizon] = useState(36);
+  const [forecastHorizon, setForecastHorizon] = useState(60);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [prediction, setPrediction] = useState(null);
