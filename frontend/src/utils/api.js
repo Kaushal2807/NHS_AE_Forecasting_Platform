@@ -6,7 +6,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://nhs-ba
 // Create axios instance with default config
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 60000, // Increased to 60 seconds for general requests
   headers: {
     'Content-Type': 'application/json',
   },
@@ -36,10 +36,12 @@ export const api = {
     }
   },
 
-  // Prediction endpoint
+  // Prediction endpoint with extended timeout
   predict: async (payload) => {
     try {
-      const response = await apiClient.post('/predict', payload);
+      const response = await apiClient.post('/predict', payload, {
+        timeout: 120000, // 2 minutes for predictions (can take longer with multiple metrics)
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Prediction failed:', error);

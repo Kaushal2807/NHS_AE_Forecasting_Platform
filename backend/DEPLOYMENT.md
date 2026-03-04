@@ -293,6 +293,39 @@ Render pings `/health` endpoint every 30 seconds:
 - ✅ Check CORS settings in `app/main.py` (should allow all origins: `["*"]`)
 - ✅ Test backend directly with `curl` to isolate issue
 
+### Issue: Timeout Errors (30000ms exceeded)
+
+**Error:** `timeout of 30000ms exceeded` when making predictions
+**Cause:** Predictions with multiple metrics and long forecast horizons can take 30+ seconds
+
+**Solutions Implemented:**
+
+1. **Frontend Timeout Increased** (`frontend/src/utils/api.js`):
+   - General requests: 60 seconds
+   - Prediction endpoint: 120 seconds (2 minutes)
+
+2. **Backend Keep-Alive Increased** (`backend/run.py`):
+   - Connection keep-alive: 120 seconds
+   - Graceful shutdown: 30 seconds
+
+3. **Additional Recommendations:**
+   - ✅ For Render: Ensure you're on Starter plan or higher (Free tier has more limits)
+   - ✅ Monitor backend logs during predictions to check actual processing time
+   - ✅ Consider adding a loading indicator in frontend for long-running predictions
+   - ✅ For very long forecasts (>60 months), consider implementing async/background jobs
+
+**Testing Timeout Fix:**
+```bash
+# Test prediction with multiple metrics
+curl -X POST https://your-api.onrender.com/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "metrics": ["Type1_Admissions", "Total_Admissions", "Type1_Attendances"],
+    "forecast_horizon": 60
+  }' \
+  --max-time 120
+```
+
 ---
 
 ## 🔐 Security Best Practices
