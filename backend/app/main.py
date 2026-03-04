@@ -50,6 +50,9 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     """Initialize data and models on startup"""
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", flush=True)
+    print("✅🎯 LATEST IMAGE LOADED - NO-DROP FORECASTING ACTIVE 🎯✅", flush=True)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", flush=True)
     logger.info("Starting NHS A&E Forecasting API...")
     
     try:
