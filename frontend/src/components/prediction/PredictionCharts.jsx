@@ -28,11 +28,27 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
 const AVAILABLE_METRICS = [
-  { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', shortLabel: 'Type 1', color: '#60a5fa' },
-  { name: 'Type2_Admissions', label: 'Type 2 Emergency Admissions', shortLabel: 'Type 2', color: '#34d399' },
+  // Admissions Metrics
+  { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', shortLabel: 'Type 1 Adm', color: '#60a5fa' },
+  { name: 'Type2_Admissions', label: 'Type 2 Emergency Admissions', shortLabel: 'Type 2 Adm', color: '#34d399' },
   { name: 'Other_Admissions', label: 'Other A&E Department Admissions', shortLabel: 'Other A&E', color: '#fb923c' },
   { name: 'Other_Emergency', label: 'Other Emergency Admissions', shortLabel: 'Other Emg', color: '#c084fc' },
-  { name: 'Total_Admissions', label: 'Total Emergency Admissions', shortLabel: 'Total', color: '#f87171' },
+  { name: 'Total_Admissions', label: 'Total Emergency Admissions', shortLabel: 'Total Adm', color: '#f87171' },
+  
+  // Attendances Metrics
+  { name: 'Type1_Attendances', label: 'Type 1 A&E Attendances', shortLabel: 'Type 1 Att', color: '#3b82f6' },
+  { name: 'Type2_Attendances', label: 'Type 2 A&E Attendances', shortLabel: 'Type 2 Att', color: '#10b981' },
+  { name: 'Other_Attendances', label: 'Other A&E Attendances', shortLabel: 'Other Att', color: '#f59e0b' },
+  { name: 'Total_Attendances', label: 'Total A&E Attendances', shortLabel: 'Total Att', color: '#ef4444' },
+  
+  // 4-Hour Target Breaches
+  { name: 'Type1_Breaches', label: 'Type 1 Four-Hour Breaches', shortLabel: 'Type 1 Breach', color: '#ec4899' },
+  { name: 'Type2_Breaches', label: 'Type 2 Four-Hour Breaches', shortLabel: 'Type 2 Breach', color: '#a855f7' },
+  { name: 'Other_Breaches', label: 'Other Four-Hour Breaches', shortLabel: 'Other Breach', color: '#f97316' },
+  { name: 'Total_Breaches', label: 'Total Four-Hour Breaches', shortLabel: 'Total Breach', color: '#dc2626' },
+  { name: 'Breach_Rate', label: 'Four-Hour Breach Rate', shortLabel: 'Breach Rate', color: '#db2777' },
+  
+  // Wait Time Quality Indicator
   { name: 'Wait_12hrs', label: 'Patients Waiting 12+ Hours', shortLabel: '12+ Hrs Wait', color: '#f472b6' },
 ];
 
@@ -56,39 +72,140 @@ const GlassPanel = ({ children, sx = {}, ...props }) => (
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null;
 
+  // Group historical and forecast values by metric
+  const groupedMetrics = {};
+  payload.forEach((entry) => {
+    const isForecast = entry.dataKey?.includes('_Forecast');
+    const metricKey = isForecast ? entry.dataKey.replace('_Forecast', '') : entry.dataKey;
+    
+    if (!groupedMetrics[metricKey]) {
+      groupedMetrics[metricKey] = { color: entry.color, name: entry.name };
+    }
+    
+    if (isForecast) {
+      groupedMetrics[metricKey].forecastValue = entry.value;
+    } else {
+      groupedMetrics[metricKey].historicalValue = entry.value;
+    }
+  });
+
+  const metrics = Object.entries(groupedMetrics);
+  const useCompactLayout = metrics.length > 5;
+
   return (
     <Box
       sx={{
-        background: 'rgba(15,23,42,0.95)',
+        background: 'rgba(15,23,42,0.98)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(255,255,255,0.15)',
         borderRadius: '12px',
-        p: 2,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        p: 1.5,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        maxWidth: useCompactLayout ? '400px' : '320px',
+        maxHeight: '400px',
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '6px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: 'rgba(255,255,255,0.05)',
+          borderRadius: '3px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'rgba(96,165,250,0.3)',
+          borderRadius: '3px',
+          '&:hover': {
+            background: 'rgba(96,165,250,0.5)',
+          },
+        },
       }}
     >
-      <Typography variant="body2" sx={{ color: '#94a3b8', mb: 1, fontWeight: 600, fontSize: '0.75rem' }}>
+      <Typography 
+        variant="body2" 
+        sx={{ 
+          color: '#e2e8f0', 
+          mb: 1.5, 
+          fontWeight: 700, 
+          fontSize: '0.8rem',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          pb: 0.75,
+        }}
+      >
         {label}
       </Typography>
-      {payload.map((entry, index) => (
-        <Typography
-          key={index}
-          variant="body2"
-          sx={{
-            color: entry.color,
-            fontWeight: 700,
-            fontSize: '0.85rem',
-            mb: 0.5,
-          }}
-        >
-          {entry.name}: {new Intl.NumberFormat('en-US').format(Math.round(entry.value))}
-          {entry.dataKey.includes('Forecast') && (
-            <Typography component="span" sx={{ ml: 1, color: '#94a3b8', fontSize: '0.7rem' }}>
-              (Predicted)
-            </Typography>
-          )}
-        </Typography>
-      ))}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: useCompactLayout ? 'repeat(2, 1fr)' : '1fr',
+          gap: useCompactLayout ? 1.5 : 1,
+        }}
+      >
+        {metrics.map(([metricKey, data], index) => {
+          const metricInfo = AVAILABLE_METRICS.find(m => m.name === metricKey);
+          const displayName = metricInfo?.shortLabel || metricKey;
+          const value = data.forecastValue || data.historicalValue;
+          const isForecast = data.forecastValue !== undefined;
+
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 0.25,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box
+                  sx={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    backgroundColor: data.color,
+                    flexShrink: 0,
+                  }}
+                />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'rgba(148,163,184,0.9)',
+                    fontSize: '0.68rem',
+                    fontWeight: 500,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {displayName}
+                </Typography>
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: data.color,
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  pl: 1.5,
+                  lineHeight: 1.2,
+                }}
+              >
+                {new Intl.NumberFormat('en-US').format(Math.round(value))}
+                {isForecast && (
+                  <Typography 
+                    component="span" 
+                    sx={{ 
+                      ml: 0.5, 
+                      color: 'rgba(148,163,184,0.7)', 
+                      fontSize: '0.65rem',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    (F)
+                  </Typography>
+                )}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
     </Box>
   );
 };
@@ -100,20 +217,41 @@ const formatYAxis = (value) => {
   return value;
 };
 
-/* Compact legend for mobile */
+/* Compact legend for mobile and desktop */
 const CompactLegend = ({ payload }) => {
   if (!payload) return null;
   // Filter out forecast-only and "none" legend entries
   const items = payload.filter(entry => entry.type !== 'none');
+  
+  // For many metrics, use a scrollable container
+  const hasMany = items.length > 8;
+  
   return (
     <Box
       sx={{
         display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: '6px 12px',
-        px: 1,
-        pb: 1,
+        flexWrap: hasMany ? 'nowrap' : 'wrap',
+        justifyContent: hasMany ? 'flex-start' : 'center',
+        gap: '12px 20px',
+        px: 2,
+        pb: 2,
+        pt: 1.5,
+        overflowX: hasMany ? 'auto' : 'visible',
+        maxWidth: '100%',
+        '&::-webkit-scrollbar': {
+          height: '6px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: 'rgba(255,255,255,0.05)',
+          borderRadius: '3px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'rgba(96,165,250,0.3)',
+          borderRadius: '3px',
+          '&:hover': {
+            background: 'rgba(96,165,250,0.5)',
+          },
+        },
       }}
     >
       {items.map((entry, index) => {
@@ -121,22 +259,37 @@ const CompactLegend = ({ payload }) => {
         const metricKey = entry.dataKey?.replace('_Forecast', '');
         const metric = AVAILABLE_METRICS.find(m => m.name === metricKey);
         return (
-          <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <Box 
+            key={index} 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '5px',
+              px: 1,
+              py: 0.5,
+              borderRadius: '6px',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              flexShrink: 0,
+            }}
+          >
             <Box
               sx={{
-                width: 8,
-                height: 8,
+                width: 10,
+                height: 10,
                 borderRadius: '50%',
                 backgroundColor: entry.color,
                 flexShrink: 0,
+                boxShadow: `0 0 8px ${entry.color}40`,
               }}
             />
             <Typography
               sx={{
-                fontSize: '0.62rem',
-                color: 'rgba(148,163,184,0.85)',
-                fontWeight: 500,
+                fontSize: '0.68rem',
+                color: 'rgba(226,232,240,0.95)',
+                fontWeight: 600,
                 whiteSpace: 'nowrap',
+                letterSpacing: '0.01em',
               }}
             >
               {metric?.shortLabel || entry.value}
@@ -335,8 +488,7 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                content={isMobile ? <CompactLegend /> : undefined}
-                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
+                content={<CompactLegend />}
                 iconType="line"
                 verticalAlign="top"
                 align="center"
@@ -410,8 +562,7 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                content={isMobile ? <CompactLegend /> : undefined}
-                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
+                content={<CompactLegend />}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"
@@ -468,8 +619,7 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                content={isMobile ? <CompactLegend /> : undefined}
-                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
+                content={<CompactLegend />}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"
@@ -541,8 +691,7 @@ const PredictionCharts = ({ prediction, selectedMetrics }) => {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend
-                content={isMobile ? <CompactLegend /> : undefined}
-                wrapperStyle={!isMobile ? { fontSize: '0.75rem', paddingTop: '10px', paddingBottom: '20px' } : undefined}
+                content={<CompactLegend />}
                 iconType="rect"
                 verticalAlign="top"
                 align="center"

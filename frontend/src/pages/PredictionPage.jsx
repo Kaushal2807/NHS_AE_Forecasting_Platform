@@ -16,11 +16,27 @@ import { api } from '../utils/api';
 import PredictionCharts from '../components/prediction/PredictionCharts';
 
 const AVAILABLE_METRICS = [
+  // Admissions Metrics
   { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', description: 'Major A&E departments (consultant-led 24/7)', color: '#60a5fa', glow: 'rgba(96,165,250,0.3)' },
   { name: 'Type2_Admissions', label: 'Type 2 Emergency Admissions', description: 'Single specialty A&E services (e.g., eye, dental)', color: '#34d399', glow: 'rgba(52,211,153,0.3)' },
   { name: 'Other_Admissions', label: 'Other A&E Department Admissions', description: 'Other A&E departments not classified as Type 1 or 2', color: '#fb923c', glow: 'rgba(251,146,60,0.3)' },
   { name: 'Other_Emergency', label: 'Other Emergency Admissions', description: 'Emergency admissions not via A&E departments', color: '#c084fc', glow: 'rgba(192,132,252,0.3)' },
   { name: 'Total_Admissions', label: 'Total Emergency Admissions', description: 'Sum of all admission types', color: '#f87171', glow: 'rgba(248,113,113,0.3)' },
+  
+  // Attendances Metrics
+  { name: 'Type1_Attendances', label: 'Type 1 A&E Attendances', description: 'Total attendances at Type 1 A&E departments', color: '#3b82f6', glow: 'rgba(59,130,246,0.3)' },
+  { name: 'Type2_Attendances', label: 'Type 2 A&E Attendances', description: 'Total attendances at Type 2 A&E services', color: '#10b981', glow: 'rgba(16,185,129,0.3)' },
+  { name: 'Other_Attendances', label: 'Other A&E Attendances', description: 'Total attendances at other A&E departments', color: '#f59e0b', glow: 'rgba(245,158,11,0.3)' },
+  { name: 'Total_Attendances', label: 'Total A&E Attendances', description: 'Sum of all A&E attendances', color: '#ef4444', glow: 'rgba(239,68,68,0.3)' },
+  
+  // 4-Hour Target Breaches
+  { name: 'Type1_Breaches', label: 'Type 1 Four-Hour Breaches', description: 'Number of patients not seen within 4 hours at Type 1', color: '#ec4899', glow: 'rgba(236,72,153,0.3)' },
+  { name: 'Type2_Breaches', label: 'Type 2 Four-Hour Breaches', description: 'Number of patients not seen within 4 hours at Type 2', color: '#a855f7', glow: 'rgba(168,85,247,0.3)' },
+  { name: 'Other_Breaches', label: 'Other Four-Hour Breaches', description: 'Number of patients not seen within 4 hours at other A&E', color: '#f97316', glow: 'rgba(249,115,22,0.3)' },
+  { name: 'Total_Breaches', label: 'Total Four-Hour Breaches', description: 'Sum of all 4-hour target breaches', color: '#dc2626', glow: 'rgba(220,38,38,0.3)' },
+  { name: 'Breach_Rate', label: 'Four-Hour Breach Rate', description: 'Percentage of patients not seen within 4 hours', color: '#db2777', glow: 'rgba(219,39,119,0.3)' },
+  
+  // Wait Time Quality Indicator
   { name: 'Wait_12hrs', label: 'Patients Waiting 12+ Hours', description: 'Quality indicator - patients waiting over 12 hours', color: '#f472b6', glow: 'rgba(244,114,182,0.3)' },
 ];
 

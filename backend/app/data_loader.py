@@ -79,9 +79,18 @@ class DataLoader:
             df_agg['Other_Emergency']
         )
         
+        # Create derived column: Breach Rate (percentage of attendances that breached 4-hour target)
+        # Avoid division by zero
+        df_agg['Breach_Rate'] = np.where(
+            df_agg['Total_Attendances'] > 0,
+            (df_agg['Total_Breaches'] / df_agg['Total_Attendances']) * 100,
+            0
+        )
+        
         logger.info(f"Aggregated to {len(df_agg)} monthly records")
         logger.info(f"Sample totals - Type1: {df_agg['Type1_Admissions'].mean():.0f}/month, "
-                   f"Total: {df_agg['Total_Admissions'].mean():.0f}/month")
+                   f"Total: {df_agg['Total_Admissions'].mean():.0f}/month, "
+                   f"Breach Rate: {df_agg['Breach_Rate'].mean():.1f}%")
         
         self.raw_data = df
         self.aggregated_data = df_agg

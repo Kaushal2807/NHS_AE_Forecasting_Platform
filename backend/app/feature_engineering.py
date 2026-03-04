@@ -120,8 +120,11 @@ class FeatureEngineer:
         
         # Include other metric columns (use last known values)
         # These are features that the model was trained with
-        metric_cols = ['Wait_12hrs', 'Type1_Admissions', 'Type2_Admissions', 
-                       'Other_Admissions', 'Other_Emergency', 'Total_Admissions']
+        # Dynamically get all numeric columns except Month and the target
+        metric_cols = [col for col in df.columns 
+                      if col not in ['Month', target_col] 
+                      and df[col].dtype in ['int64', 'float64']]
+        
         for col in metric_cols:
             if col in df.columns and col != target_col:
                 next_row[col] = last_row[col]
