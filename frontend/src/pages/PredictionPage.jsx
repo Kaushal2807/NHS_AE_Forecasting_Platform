@@ -3,7 +3,7 @@ import {
   Box, Container, Typography, Button, Paper,
   FormControl, Select, MenuItem, Checkbox,
   ListItemText, Slider, CircularProgress, Alert,
-  Chip, Grid, LinearProgress, Stack,
+  Chip, LinearProgress, Stack,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -13,6 +13,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import TuneIcon from '@mui/icons-material/Tune';
 import { api } from '../utils/api';
+import PredictionCharts from '../components/prediction/PredictionCharts';
 
 const AVAILABLE_METRICS = [
   { name: 'Type1_Admissions', label: 'Type 1 Emergency Admissions', description: 'Major A&E departments (consultant-led 24/7)', color: '#60a5fa', glow: 'rgba(96,165,250,0.3)' },
@@ -91,7 +92,7 @@ const PredictionPage = () => {
       <Box sx={{ position: 'fixed', top: '10%', left: '-8%', width: { xs: 200, md: 500 }, height: { xs: 200, md: 500 }, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
       <Box sx={{ position: 'fixed', bottom: '10%', right: '-5%', width: { xs: 150, md: 400 }, height: { xs: 150, md: 400 }, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.06) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
         {/* ── Page header ── */}
         <Box sx={{ pt: { xs: 3, md: 5 }, mb: { xs: 3, md: 5 } }}>
           <Button
@@ -140,11 +141,11 @@ const PredictionPage = () => {
         </Box>
 
         {/* ── Main two-column layout, stacks on mobile ── */}
-        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="flex-start">
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: { xs: 2, md: 3, lg: 4 }, alignItems: 'flex-start' }}>
 
           {/* Left: Configuration */}
-          <Grid item xs={12} md={5}>
-            <GlassPanel sx={{ p: { xs: 2.5, md: 4 } }}>
+          <Box sx={{ width: { xs: '100%', md: '320px', lg: '340px' }, flexShrink: 0 }}>
+            <GlassPanel sx={{ p: { xs: 3, md: 4 }, width: '100%', position: { md: 'sticky' }, top: { md: 80 } }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: { xs: 3, md: 4 } }}>
                 <TuneIcon sx={{ fontSize: 20, color: '#60a5fa' }} />
                 <Typography variant="h5" fontWeight={700} sx={{ color: '#e2e8f0', fontSize: { xs: '1.05rem', md: '1.25rem' } }}>
@@ -163,7 +164,7 @@ const PredictionPage = () => {
                     renderValue={(selected) =>
                       selected.length === 0
                         ? <Typography sx={{ color: 'rgba(100,116,139,0.6)', fontSize: '0.85rem' }}>Choose metrics…</Typography>
-                        : <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.6, py: 0.5 }}>
+                        : <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.6, py: 0.5, maxHeight: '120px', overflowY: 'auto', '&::-webkit-scrollbar': { width: '4px' }, '&::-webkit-scrollbar-thumb': { background: 'rgba(148,163,184,0.3)', borderRadius: '4px' } }}>
                           {selected.map((val) => {
                             const m = AVAILABLE_METRICS.find(x => x.name === val);
                             return (
@@ -208,18 +209,48 @@ const PredictionPage = () => {
 
               {/* Horizon slider */}
               <Box sx={{ mb: { xs: 3, md: 4 } }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1.5 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                   <Typography variant="body2" fontWeight={600} sx={{ color: 'rgba(148,163,184,0.7)', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '0.7rem' }}>
                     Forecast Horizon
                   </Typography>
-                  <Chip label={`${forecastHorizon}mo · ${(forecastHorizon / 12).toFixed(1)}yr`} size="small" sx={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', color: '#93c5fd', fontWeight: 700, fontSize: '0.72rem', height: 24 }} />
+                  <Chip
+                    label={`${forecastHorizon} months • ${(forecastHorizon / 12).toFixed(1)} years`}
+                    size="small"
+                    sx={{
+                      background: 'rgba(59,130,246,0.12)',
+                      border: '1px solid rgba(59,130,246,0.3)',
+                      color: '#93c5fd',
+                      fontWeight: 700,
+                      fontSize: '0.72rem',
+                      height: 26
+                    }}
+                  />
                 </Stack>
-                <Box sx={{ px: 1 }}>
+                <Box sx={{ px: 1.5 }}>
                   <Slider
-                    value={forecastHorizon} onChange={(_, v) => setForecastHorizon(v)}
-                    min={1} max={60}
-                    marks={[{ value: 12, label: '1y' }, { value: 24, label: '2y' }, { value: 36, label: '3y' }, { value: 48, label: '4y' }, { value: 60, label: '5y' }]}
+                    value={forecastHorizon}
+                    onChange={(_, v) => setForecastHorizon(v)}
+                    min={1}
+                    max={60}
+                    marks={[
+                      { value: 12, label: '1y' },
+                      { value: 24, label: '2y' },
+                      { value: 36, label: '3y' },
+                      { value: 48, label: '4y' },
+                      { value: 60, label: '5y' }
+                    ]}
                     valueLabelDisplay="auto"
+                    sx={{
+                      '& .MuiSlider-thumb': {
+                        boxShadow: '0 2px 8px rgba(59,130,246,0.4)',
+                      },
+                      '& .MuiSlider-track': {
+                        height: 6,
+                      },
+                      '& .MuiSlider-rail': {
+                        height: 6,
+                      },
+                    }}
                   />
                 </Box>
               </Box>
@@ -228,16 +259,23 @@ const PredictionPage = () => {
               <Button
                 variant="contained" size="large" fullWidth onClick={handlePredict}
                 disabled={loading || !selectedMetrics.length}
-                startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <TrendingUpIcon />}
+                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <TrendingUpIcon />}
                 sx={{
                   background: 'linear-gradient(135deg, #2563eb, #0891b2)',
-                  boxShadow: '0 8px 25px rgba(37,99,235,0.35)',
-                  py: { xs: 1.5, md: 1.8 },
-                  fontSize: { xs: '0.9rem', md: '1rem' },
+                  boxShadow: '0 8px 28px rgba(37,99,235,0.4)',
+                  py: { xs: 1.6, md: 1.9 },
+                  fontSize: { xs: '0.92rem', md: '1.02rem' },
                   fontWeight: 700,
                   borderRadius: '12px',
-                  '&:hover': { background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', boxShadow: '0 12px 35px rgba(59,130,246,0.5)', transform: 'translateY(-2px)' },
-                  '&:disabled': { background: 'rgba(30,41,59,0.5)', color: 'rgba(100,116,139,0.5)' },
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                    boxShadow: '0 12px 38px rgba(59,130,246,0.55)',
+                    transform: 'translateY(-2px)'
+                  },
+                  '&:disabled': {
+                    background: 'rgba(30,41,59,0.5)',
+                    color: 'rgba(100,116,139,0.5)'
+                  },
                   '&::after': { display: 'none' },
                   transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 }}
@@ -245,7 +283,7 @@ const PredictionPage = () => {
                 {loading ? 'Generating…' : 'Generate Forecast'}
               </Button>
 
-              {error && <Alert severity="error" sx={{ mt: 2, fontSize: '0.82rem' }}>{error}</Alert>}
+              {error && <Alert severity="error" sx={{ mt: 2.5, fontSize: '0.84rem', borderRadius: '10px' }}>{error}</Alert>}
 
               {/* Accuracy bars */}
               {modelAccuracy && selectedMetrics.length > 0 && (
@@ -275,18 +313,18 @@ const PredictionPage = () => {
                 </Box>
               )}
             </GlassPanel>
-          </Grid>
+          </Box>
 
           {/* Right: Results */}
-          <Grid item xs={12} md={7}>
+          <Box sx={{ flex: 1, minWidth: 0, width: { xs: '100%', md: 'auto' } }}>
             {/* Loading */}
             {loading && (
-              <GlassPanel sx={{ p: { xs: 5, md: 8 }, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: { xs: 200, md: 300 } }}>
+              <GlassPanel sx={{ p: { xs: 4, md: 8 }, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: { xs: 250, md: 350 }, width: '100%' }}>
                 <Box sx={{ position: 'relative', mb: 3 }}>
-                  <CircularProgress size={64} sx={{ color: '#3b82f6', filter: 'drop-shadow(0 0 16px rgba(59,130,246,0.5))' }} />
+                  <CircularProgress size={72} thickness={3.5} sx={{ color: '#3b82f6', filter: 'drop-shadow(0 0 18px rgba(59,130,246,0.6))' }} />
                 </Box>
-                <Typography variant="h6" fontWeight={700} sx={{ color: '#e2e8f0', mb: 1, fontSize: { xs: '1rem', md: '1.15rem' } }}>Generating Forecast…</Typography>
-                <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.82rem' }}>
+                <Typography variant="h6" fontWeight={700} sx={{ color: '#e2e8f0', mb: 1.5, fontSize: { xs: '1.05rem', md: '1.2rem' } }}>Generating Forecast…</Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.85rem' }}>
                   Processing {selectedMetrics.length} metric(s) for {forecastHorizon} months
                 </Typography>
               </GlassPanel>
@@ -294,49 +332,68 @@ const PredictionPage = () => {
 
             {/* Empty state */}
             {!loading && !prediction && (
-              <GlassPanel sx={{ p: { xs: 4, md: 8 }, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: { xs: 200, md: 300 }, border: '2px dashed rgba(255,255,255,0.06)' }}>
-                <Box sx={{ width: { xs: 70, md: 90 }, height: { xs: 70, md: 90 }, borderRadius: '24px', background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, animation: 'float 4s ease-in-out infinite' }}>
-                  <TimelineIcon sx={{ fontSize: { xs: 36, md: 48 }, color: '#60a5fa', opacity: 0.7 }} />
+              <GlassPanel sx={{ p: { xs: 4, md: 8 }, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: { xs: 250, md: 350 }, border: '2px dashed rgba(255,255,255,0.08)', width: '100%' }}>
+                <Box sx={{ width: { xs: 75, md: 95 }, height: { xs: 75, md: 95 }, borderRadius: '24px', background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, animation: 'float 4s ease-in-out infinite' }}>
+                  <TimelineIcon sx={{ fontSize: { xs: 38, md: 50 }, color: '#60a5fa', opacity: 0.7 }} />
                 </Box>
-                <Typography variant="h5" fontWeight={700} sx={{ color: '#e2e8f0', mb: 1.5, fontSize: { xs: '1.1rem', md: '1.35rem' } }}>Ready to Generate</Typography>
-                <Typography variant="body1" sx={{ color: 'rgba(148,163,184,0.7)', maxWidth: 320, fontSize: { xs: '0.85rem', md: '0.95rem' } }}>
-                  Configure your metrics and horizon on the left, then click Generate Forecast.
+                <Typography variant="h5" fontWeight={700} sx={{ color: '#e2e8f0', mb: 1.5, fontSize: { xs: '1.15rem', md: '1.4rem' } }}>Ready to Generate</Typography>
+                <Typography variant="body1" sx={{ color: 'rgba(148,163,184,0.7)', maxWidth: 360, fontSize: { xs: '0.88rem', md: '0.98rem' }, lineHeight: 1.6 }}>
+                  Configure your metrics and horizon on the left, then click Generate Forecast to see detailed predictions.
                 </Typography>
               </GlassPanel>
             )}
 
             {/* Results */}
             {!loading && prediction && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 }, width: '100%' }}>
                 {/* Success */}
-                <GlassPanel sx={{ p: { xs: 2.5, md: 3 }, border: '1px solid rgba(16,185,129,0.25)', background: 'rgba(5,150,105,0.08)' }}>
-                  <Stack direction="row" alignItems="center" justifyContent="center" gap={1.5} sx={{ mb: 1 }}>
-                    <CheckCircleIcon sx={{ color: '#34d399', fontSize: 20 }} />
-                    <Typography variant="h6" fontWeight={700} sx={{ color: '#34d399', fontSize: { xs: '0.95rem', md: '1.05rem' } }}>Forecast Generated Successfully</Typography>
-                  </Stack>
-                  <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="center" gap={{ xs: 0.5, sm: 3 }}>
-                    <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.78rem' }}>{new Date(prediction.forecast_generated_at).toLocaleString()}</Typography>
-                    <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.78rem' }}>Horizon: {prediction.horizon_months} months</Typography>
-                  </Stack>
+                <GlassPanel sx={{ p: { xs: 3, md: 4 }, border: '1px solid rgba(16,185,129,0.3)', background: 'rgba(5,150,105,0.1)', width: '100%' }}>
+                  <Box sx={{ width: '100%' }}>
+                    <Stack direction="row" alignItems="center" justifyContent="center" gap={1.5} sx={{ mb: 1.5 }}>
+                      <CheckCircleIcon sx={{ color: '#34d399', fontSize: { xs: 24, md: 26 } }} />
+                      <Typography variant="h6" fontWeight={700} sx={{ color: '#34d399', fontSize: { xs: '1.1rem', md: '1.25rem' } }}>Forecast Generated Successfully</Typography>
+                    </Stack>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="center" alignItems="center" gap={{ xs: 0.5, sm: 4 }}>
+                      <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: { xs: '0.85rem', md: '0.9rem' }, fontWeight: 500 }}>{new Date(prediction.forecast_generated_at).toLocaleString()}</Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: { xs: '0.85rem', md: '0.9rem' }, fontWeight: 500 }}>Horizon: {prediction.horizon_months} months</Typography>
+                    </Stack>
+                  </Box>
                 </GlassPanel>
 
                 {/* Yearly projections */}
                 {prediction.yearly_aggregates && (
-                  <GlassPanel sx={{ p: { xs: 2.5, md: 4 } }}>
-                    <Stack direction="row" alignItems="center" justifyContent="center" gap={1.5} sx={{ mb: 3 }}>
-                      <TrendingUpIcon sx={{ fontSize: 20, color: '#60a5fa' }} />
-                      <Typography variant="h5" fontWeight={700} sx={{ color: '#e2e8f0', fontSize: { xs: '1.05rem', md: '1.25rem' } }}>Yearly Projections</Typography>
+                  <GlassPanel sx={{ p: { xs: 3, md: 4 }, width: '100%' }}>
+                    <Stack direction="row" alignItems="center" gap={1.5} sx={{ mb: 3.5 }}>
+                      <TrendingUpIcon sx={{ fontSize: 22, color: '#60a5fa' }} />
+                      <Typography variant="h5" fontWeight={700} sx={{ color: '#e2e8f0', fontSize: { xs: '1.05rem', md: '1.25rem' } }}>Yearly Projections Summary</Typography>
                     </Stack>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                       {Object.entries(prediction.yearly_aggregates).map(([name, years]) => {
                         const metric = AVAILABLE_METRICS.find(m => m.name === name);
                         return (
-                          <Box key={name} sx={{ p: { xs: 2, md: 3 }, background: 'rgba(15,23,42,0.4)', border: `1px solid ${metric?.color}25`, borderLeft: `3px solid ${metric?.color}`, borderRadius: '14px', '&:hover': { background: 'rgba(15,23,42,0.6)', border: `1px solid ${metric?.color}45`, borderLeft: `3px solid ${metric?.color}`, boxShadow: `0 8px 25px ${metric?.glow}` }, transition: 'all 0.3s ease' }}>
-                            <Typography variant="subtitle1" fontWeight={700} sx={{ color: metric?.color, mb: 2, fontSize: { xs: '0.82rem', md: '0.9rem' }, textAlign: 'center' }}>
+                          <Box
+                            key={name}
+                            sx={{
+                              p: { xs: 2.5, md: 3 },
+                              background: 'rgba(15,23,42,0.5)',
+                              border: `1px solid ${metric?.color}30`,
+                              borderLeft: `4px solid ${metric?.color}`,
+                              borderRadius: '14px',
+                              '&:hover': {
+                                background: 'rgba(15,23,42,0.7)',
+                                border: `1px solid ${metric?.color}50`,
+                                borderLeft: `4px solid ${metric?.color}`,
+                                boxShadow: `0 10px 30px ${metric?.glow}`,
+                                transform: 'translateY(-2px)',
+                              },
+                              transition: 'all 0.3s ease'
+                            }}
+                          >
+                            <Typography variant="subtitle1" fontWeight={700} sx={{ color: metric?.color, mb: 2.5, fontSize: { xs: '0.88rem', md: '0.95rem' }, textAlign: 'center', letterSpacing: '0.02em' }}>
                               {metric?.label}
                             </Typography>
-                            <Grid container spacing={1.5} justifyContent="center">
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
                               {Object.keys(years)
                                 .filter(key => key.startsWith('year_') && years[key] > 0)
                                 .sort((a, b) => {
@@ -347,25 +404,40 @@ const PredictionPage = () => {
                                 .map((yr) => {
                                   const yearNum = parseInt(yr.split('_')[1]);
                                   return (
-                                    <Grid item xs={6} sm={4} md={2.4} key={yr}>
-                                      <Box sx={{ textAlign: 'center', p: { xs: 1, md: 1.5 }, background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                        <Typography variant="caption" sx={{ color: 'rgba(100,116,139,0.8)', fontSize: '0.68rem', display: 'block', mb: 0.5 }}>Year {yearNum}</Typography>
-                                        <Typography variant="h6" fontWeight={700} sx={{ color: '#f1f5f9', fontSize: { xs: '0.92rem', md: '1.1rem' } }}>{formatNumber(years[yr])}</Typography>
+                                    <Box key={yr} sx={{ flex: '1 1 0', minWidth: { xs: '120px', sm: '140px' } }}>
+                                      <Box sx={{
+                                        textAlign: 'center',
+                                        p: { xs: 1.2, md: 1.6 },
+                                        background: 'rgba(255,255,255,0.04)',
+                                        borderRadius: '12px',
+                                        border: '1px solid rgba(255,255,255,0.06)',
+                                        transition: 'all 0.2s ease',
+                                        '&:hover': {
+                                          background: 'rgba(255,255,255,0.06)',
+                                          border: `1px solid ${metric?.color}40`,
+                                          transform: 'translateY(-2px)',
+                                        },
+                                      }}>
+                                        <Typography variant="caption" sx={{ color: 'rgba(148,163,184,0.8)', fontSize: '0.7rem', display: 'block', mb: 0.6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Year {yearNum}</Typography>
+                                        <Typography variant="h6" fontWeight={700} sx={{ color: '#f1f5f9', fontSize: { xs: '0.95rem', md: '1.12rem' } }}>{formatNumber(years[yr])}</Typography>
                                       </Box>
-                                    </Grid>
+                                    </Box>
                                   );
                                 })}
-                            </Grid>
+                            </Box>
                           </Box>
                         );
                       })}
                     </Box>
                   </GlassPanel>
                 )}
+
+                {/* Charts */}
+                <PredictionCharts prediction={prediction} selectedMetrics={selectedMetrics} />
               </Box>
             )}
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
     </Box>
   );
